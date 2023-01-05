@@ -8,6 +8,7 @@ import {
   FormGroup,
   TextField,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const style = {
   position: "absolute",
@@ -22,6 +23,15 @@ const style = {
 };
 
 export default function BasicModal(props) {
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const onSubmit =(dataObj) =>{
+    console.log("modalData is:",dataObj);
+    let orignalData = props.data
+    orignalData.result.push(dataObj)
+    props.setData(orignalData)
+  }
+
   return (
     <div>
       <Modal
@@ -31,17 +41,21 @@ export default function BasicModal(props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex space-x-2 items-center">
-            <TextField size="small" label="Gender Name" />
-            <TextField size="small" label="Gender Code" />
+            <TextField size="small" name="gnederName" label="Gender Name"{...register("genderName")} />
+            <TextField size="small" name="genderCode" label="Gender Code" {...register("genderCode")} />
             <FormGroup> 
               <FormControlLabel
                 control={<Checkbox defaultChecked />}
                 label="Active"
+                name="active"
+                {...register("active")}
               />
             </FormGroup>
-            <Button variant="contained">Add</Button>
+            <Button type="submit" variant="contained">Add</Button>
           </div>
+          </form>
         </Box>
       </Modal>
     </div>

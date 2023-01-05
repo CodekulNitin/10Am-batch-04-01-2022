@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import React from "react";
+
 import FormModal from "./FormModal";
 import Table from './common/Table'
 
-const data= {
+const formData= {
   result:[
     {
       id:1,
@@ -36,16 +37,21 @@ const data= {
 }
 
 function Form() {
+  const [data,setData]= React.useState([])
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  React.useEffect (()=>{
+
+  },[])
 
   return (
     <div>
       <Button onClick={handleOpen} variant="contained">
         Add New
       </Button>
-      <FormModal open={open} handleClose={handleClose} />
+      <FormModal data={data} setData={setData} open={open} handleClose={handleClose} />
       <Table data={data}/>
     </div>
   );

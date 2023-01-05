@@ -4,7 +4,7 @@ import HomePage from "./components/tailwind/HomePage";
 function App() {
   return <div className="App">
     <Form />
-    <HomePage />
+    {/* <HomePage /> */}
   </div>;
 }
 
