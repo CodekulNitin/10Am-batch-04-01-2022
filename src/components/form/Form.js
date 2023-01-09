@@ -9,8 +9,8 @@ const loginData = {
   result: [
     {
       Id: 1,
-      firstName: "John",
-      lastName: "doe",
+      email: "John@gmail.com",
+      fullName: "doe",
       mobileNumber: "123456",
       address: "codeKul,pune",
       pinCode: "424210",
