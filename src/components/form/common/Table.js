@@ -1,60 +1,75 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { object } from "yup";
 
-export default function StickyHeadTable(props) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+export default function CommonTable(props) {
+  console.log("table result is", props);
+  const [editAction, setEditAction] = React.useState(true);
+  const [deleteAction, setDeleteAction] = React.useState(true);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const removeHeaders = (headers, fieldToRemove) => {
+    return headers.filter((v) => {
+      return !fieldToRemove.includes(v);
+    });
   };
+  // set rows object to table
+  const allHeaders = Object.keys(props.data.result[0]);
+  const headers = removeHeaders(allHeaders, ["Id"]);
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  React.useEffect(() => {
+    props.data.actions.forEach((action) => {
+      if (action === "Edit") {
+        setEditAction(true);
+      }
+      if (action === "Delete") {
+        setDeleteAction(true);
+      }
+    });
+  }, []);
 
+console.log(headers);
   return (
-    <div className="px-6">
-
-    <Paper sx={{ width: "100%", overflow: "hidden",border:"1px solid gray" }}>
-      <TableContainer sx={{ maxHeight: 240 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Full Name</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.data.result.map((element) => (
-              <TableRow>
-                <TableCell>{element.fullName}</TableCell>
-                <TableCell>{element.address}</TableCell>
-                <TableCell>{element.active}</TableCell>
-              </TableRow>
+    <TableContainer component={Paper}>
+      <Table size="small" stickyHeader area-aria-label="stick table">
+        <TableHead>
+          <TableRow className="bg-gray-300" >
+            <TableCell style={{backgroundColor:"lightgray"}}>Actions</TableCell>
+            {headers.map((header, index) => (
+              <TableCell style={{backgroundColor:"lightgray"}}  key={index}>{header}</TableCell>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      /> */}
-    </Paper>
-    </div>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {props.data.result &&
+            props.data.result.map((row, index) => {
+              return (
+                <TableRow key={index}>
+                  {props.data.actions.length > 0 ? (
+                    <TableCell>
+                      <div className="flex space-x-2">
+
+                      <div>{editAction ? <span className="text-blue-700">Edit</span> : null}</div>
+                      <div>{deleteAction ? <span className="text-red-700">Delete</span> : null}</div>
+                      </div>
+
+                    </TableCell>
+                  ) : null}
+                  {headers && headers.map((header,i)=>(
+                    <TableCell>
+                      {row[header]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }

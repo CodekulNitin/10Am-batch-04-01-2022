@@ -1,58 +1,62 @@
-import { Button } from "@mui/material";
+
+import Button from "@mui/material/Button";
 import React from "react";
+import CommonTable from "./common/Table";
+import MainModal from "./FormModal";
 
-import FormModal from "./FormModal";
-import Table from './common/Table'
-
-const formData= {
-  result:[
+const loginData = {
+  massage: "Login List",
+  result: [
     {
-      id:1,
-      fullName:"codekul",
-      address:"kothrud depot",
-      active:true
+      Id: 1,
+      firstName: "John",
+      lastName: "doe",
+      mobileNumber: "123456",
+      address: "codeKul,pune",
+      pinCode: "424210",
+      password: "2345",
     },
-    {
-      id:2,
-      fullName:"codekul",
-      address:"kothrud depot",
-      active:true
-
-    },
-    {
-      id:3,
-      fullName:"codekul",
-      address:"kothrud depot",
-      active:false
-
-    },
-    {
-      id:4,
-      fullName:"codekul",
-      address:"kothrud depot",
-      active:true
-
-    },
-  ]
-}
+  ],
+  statusCode: "200",
+  actions: ["Edit", "Delete"],
+};
 
 function Form() {
-  const [data,setData]= React.useState([])
+  const [data, setData] = React.useState({ actions: [], result: [] });
+  const [dataResult, setDataResult] = React.useState([]);
+
+  // //open and close modal
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  React.useEffect (()=>{
+  React.useEffect(() => {
+    setData(loginData);
+    setDataResult(loginData.result);
+  }, []);
 
-  },[])
-
+  console.log("data Result is", dataResult);
+  // https://www.bezkoder.com/react-hook-form-material-ui-validation/
   return (
-    <div>
-      <Button onClick={handleOpen} variant="contained">
-        Add New
-      </Button>
-      <FormModal data={data} setData={setData} open={open} handleClose={handleClose} />
-      <Table data={data}/>
+    <div className="mt-12 grid justify-center">
+      <Button onClick={handleOpen}>Open modal</Button>
+
+      <>
+        {data.result.length > 0 ? (
+          <CommonTable
+            data={data}
+            dataResult={dataResult}
+            setDataResult={setDataResult}
+          />
+        ) : null}
+      </>
+
+      <MainModal
+        open={open}
+        handleClose={handleClose}
+        data={data}
+        setData={setData}
+      />
     </div>
   );
 }
